@@ -254,6 +254,18 @@
             font-size: 17px;
             text-align: center;
         }
+        .save_to_local button:nth-of-type(2){
+            width: 200px;
+            height: 30px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.9);
+            border-radius: 3px;
+            border-width: 0;
+            outline: none;
+            font-family: KaiTi;
+            font-size: 17px;
+            text-align: center;
+        }
 
         .save_to_local button:hover {
             background-color: rgba(0, 0, 0, 0.7);
@@ -325,7 +337,7 @@
                     </div>
                     <div class="save_to_local">
                         <button @click="saveData">保存</button>
-                        <button @click="delData">清除数据</button>
+                        <button @click="delData">清除本地数据(慎重)</button>
                     </div>
                 </div>
             </div>
