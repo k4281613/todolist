@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>todolist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            background: url("assets/img/tide.jpg");
+            background-position: center;
+            background-size: cover;
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .context {
+            /*background: rgba(20,20,20,1);*/
+            width: 800px;
+            height: 600px;
+            border: 1px solid black;
+            border-radius: 7px;
+            box-shadow: 2px 2px 10px #000000;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .todolist_header {
+            height: 35px;
+            width: 100%;
+            background: #f0f5f8;
+            line-height: 35px;
+            font-weight: bolder;
+            text-align: center;
+        }
+
+        .todolist_header_btn {
+            float: right;
+            margin-right: 5px;
+            font-size: 12px;
+            font-weight: bolder;
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .main {
+            width: 1000px;
+            height: 565px;
+            transition: 2s all;
+            /*background: rebeccapurple;*/
+        }
+
+        .main_aside_hidden {
+            transform: translateX(-200px);
+        }
+
+        .main_aside {
+            width: 200px;
+            height: 525px;
+            background: rgba(20, 20, 20, 0.8);
+            float: left;
+            transition: 1s all;
+            overflow: hidden;
+            padding: 20px 0;
+        }
+
+        .main_aside div {
+            width: 200px;
+            height: 30px;
+            line-height: 30px;
+            padding: 5px 20px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .main_aside div:hover {
+            color: darkorange;
+        }
+
+        .main_ctx {
+            width: 800px;
+            height: 545px;
+            background: #ffffff;
+            color: #142024;
+            transition: 1s all;
+            left: 200px;
+            position: absolute;
+            padding: 10px 20px;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+        .main_ctx_date {
+            font-size: 25px;
+            font-weight: 700;
+            opacity: 0.9;
+            color: black;
+        }
+
+        .main_ctx_time {
+            font-size: 15px;
+            color: darkorange;
+            opacity: 0.4;
+        }
+
+        .main_ctx_task {
+            width: 560px;
+            height: auto;
+            /*border: 1px solid black;*/
+            margin: 10px 0;
+            padding-right: 20px;
+        }
+
+        .main_ctx_task_container {
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .main_ctx_task_container h3 {
+            opacity: 0.8;
+        }
+
+        .main_ctx_task_list {
+            height: auto;
+            width: 100%;
+            padding: 5px;
+            border-top: 1px solid rgba(0, 0, 0, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .task_list_header {
+            height: 20px;
+            line-height: 20px;
+            width: 100%;
+        }
+
+        .task_list_header span {
+            float: right;
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.5);
+            margin-right: 10px;
+        }
+
+        .task_list_ctx {
+            text-indent: 1.5rem;
+            height: 50px;
+            overflow: hidden;
+            /*transition: 1s all;*/
+            font-size: 14px;
+        }
+        .task_list_ctx_hidden {
+            height: 0px;
+        }
+
+        .add_task {
+            font-size: 14px;
+            color: #8a8a8a;
+            display: flex;
+            align-items: center;
+            height: 30px;
+            font-weight: bold;
+        }
+
+        .add_task:hover {
+            font-size: 18px;
+        }
+
+        .add_task_setter {
+            position: fixed;
+            z-index: 100;
+            width: 100vw;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .add_task_setter_ctx {
+            height: 400px;
+            width: 600px;
+            background: white;
+            border-radius: 5px;
+            padding: 20px;
+        }
+
+        .add_task_setter_title {
+            height: 40px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+            line-height: 40px;
+            padding: 5px;
+            color: #8a8a8a;
+        }
+
+        .add_task_setter_title input {
+            outline-style: none;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 5px;
+            font-size: 14px;
+            font-family: Microsoft soft;
+            width: 530px;
+        }
+
+        .add_task_setter_title input:focus {
+            border-color: #66afe9;
+            outline: 0;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6)
+        }
+
+        .add_task_setter_context {
+            padding: 10px 5px;
+        }
+
+        .add_task_setter_context textarea {
+            outline-style: none;
+            width: 570px;
+            height: 280px;
+            font-size: 14px;
+            font-family: Microsoft soft;
+            padding: 10px;
+        }
+
+        .add_task_setter_footer {
+            padding: 0 5px 5px 5px;
+        }
+
+        .add_task_setter_footer button {
+            float: right;
+            margin: 0 5px;
+        }
+
+        .save_to_local {
+            position: absolute;
+            bottom: 30px;
+        }
+
+        .save_to_local button {
+            width: 100px;
+            height: 30px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.9);
+            border-radius: 3px;
+            border-width: 0;
+            outline: none;
+            font-family: KaiTi;
+            font-size: 17px;
+            text-align: center;
+        }
+
+        .save_to_local button:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="container">
+        <div class="context">
+            <header class="todolist_header">
+                {{context}}
+                <div @click="isShowAside" class="todolist_header_btn">aside</div>
+            </header>
+            <div :class="main_style">
+                <aside class="main_aside">
+                    <div v-for="(item,index) in aside_list" :key="item.id" @click="goto(index)">{{item.text}}</div>
+                </aside>
+                <div class="main_ctx">
+                    <p>
+                        <label class="main_ctx_date">{{today}}</label>
+                        <label class="main_ctx_time">{{time}}</label>
+                    </p>
+                    <div class="main_ctx_task">
+                        <div class="main_ctx_task_container">
+                            <h3>{{select_tab.text}}的任务：</h3>
+                            <div class="main_ctx_task_list" v-for="(item,index) in task_list" :key="item.id">
+                                <h5 class="task_list_header">
+                                    {{item.title}}
+                                    <span @click="del_task(index)">删除</span>
+                                    <span @click="finish_task(index)">完成</span>
+                                    <span @click="isShowMainCtx(index)">context</span>
+                                </h5>
+                                <div :class="item.task_list_ctx_style">
+                                    {{item.context}}
+                                </div>
+                            </div>
+                            <div class="add_task">
+                                <object data="assets/icon/add.svg" type="image/svg+xml"></object>
+                                <label @click="isShow_add_task_setter">新建任务</label>
+                            </div>
+                            <div class="add_task_setter" v-if="add_task_show">
+                                <div class="add_task_setter_ctx">
+                                    <h4 class="add_task_setter_title">
+                                        <label>标题：</label><input placeholder="请输入标题" type="text" v-model="task_title">
+                                    </h4>
+                                    <div class="add_task_setter_context">
+                                        <textarea placeholder="请输入内容" v-model="task_ctx"></textarea>
+                                    </div>
+                                    <div class="add_task_setter_footer">
+                                        <button @click="isShow_add_task_setter">关闭</button>
+                                        <button @click="add_task">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="main_ctx_task_container">
+                            <h3>已完成：</h3>
+                            <div class="main_ctx_task_list" v-for="(item,index) in finish_task_list" :key="item.id">
+                                <h5 class="task_list_header">
+                                    {{item.title}}
+                                    <span @click="isShowMainFinishCtx(index)">context</span>
+                                </h5>
+                                <div :class="item.task_list_ctx_style">
+                                    {{item.context}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="save_to_local">
+                        <button @click="saveData">保存</button>
+                        <button @click="delData">清除数据</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="vue.js"></script>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                context: 'todolist',
+                main_style: {main: true, main_aside_hidden: false},
+                aside_list: [
+                    {id: 1, text: '今天', value: 'today'},
+                    {id: 2, text: '明天', value: 'tomorrow'},
+                    {id: 3, text: '一周内', value: 'weekly'},
+                    {id: 4, text: '其他', value: 'order'},
+                ],
+                today: '',
+                time: '',
+                task_list: [
+                    {
+                        id: 1,
+                        title: '任务1',
+                        context: '任务的内容',
+                        task_list_ctx_style: {task_list_ctx: true, task_list_ctx_hidden: true}
+                    }
+                ],
+                add_task_show: false,
+                task_title: '',
+                task_ctx: '',
+                finish_task_list: [
+                    {
+                        id: 1,
+                        title: '完成的任务',
+                        context: '当前任务已完成',
+                        task_list_ctx_style: {task_list_ctx: true, task_list_ctx_hidden: true}
+                    }
+                ],
+                select_tab:{id: 1, text: '今天', value: 'today'},
+            }
+        },
+        computed: {},
+        methods: {
+            delData(){
+                this.task_list=this.finish_task_list=[];
+                localStorage.removeItem(this.select_tab.value);
+                alert('数据已清除')
+            },
+            getdata(key){
+                let json = JSON.parse(localStorage.getItem(key)) || {};
+                // console.log(json);
+                let obj=this.aside_list.filter((item)=>{
+                    return item.value===key;
+                })[0]
+                this.select_tab=obj;
+                this.task_list=json.task_list || [];
+                this.finish_task_list=json.finish_task_list || [];
+            },
+            goto(index){
+                let key=this.aside_list[index].value;
+                this.getdata(key);
+            },
+            saveData() {
+                let obj = {
+                    task_list:this.task_list,
+                    finish_task_list:this.finish_task_list,
+                    select_tab:this.select_tab
+                }
+                localStorage.setItem(this.select_tab.value, JSON.stringify(obj));
+                console.log(localStorage.getItem(this.select_tab.value));
+                alert('数据已存储');
+            },
+            add_task() {
+                if (this.task_title && this.task_ctx) {
+                    let obj = {
+                        id: this.task_list.length + 1,
+                        title: this.task_title,
+                        context: this.task_ctx,
+                        task_list_ctx_style: {task_list_ctx: true, task_list_ctx_hidden: true}
+                    }
+                    this.task_list.push(obj);
+                    this.isShow_add_task_setter();
+                    this.task_title = '';
+                    this.task_ctx = '';
+                } else {
+                    alert('请输入信息')
+                }
+            },
+            finish_task(index) {
+                let obj = this.task_list[index];
+                obj.id = this.finish_task_list.length + 1;
+                obj.task_list_ctx_style = {task_list_ctx: true, task_list_ctx_hidden: true};
+                this.finish_task_list.push(obj);
+                this.del_task(index);
+            },
+            del_task(index) {
+                this.task_list.splice(index, 1);
+            },
+            isShow_add_task_setter() {
+                this.add_task_show = !this.add_task_show;
+            },
+            isShowAside() {
+                this.main_style.main_aside_hidden = !this.main_style.main_aside_hidden;
+            },
+            isShowMainFinishCtx(index) {
+                const isShow = this.finish_task_list[index].task_list_ctx_style.task_list_ctx_hidden;
+                let obj = this.finish_task_list[index];
+                obj.task_list_ctx_style.task_list_ctx_hidden = !isShow;
+                this.$set(this.finish_task_list, index, obj);
+                // console.log(this.finish_task_list);
+            },
+            isShowMainCtx(index) {
+                const isShow = this.task_list[index].task_list_ctx_style.task_list_ctx_hidden;
+                let obj = this.task_list[index];
+                obj.task_list_ctx_style.task_list_ctx_hidden = !isShow;
+                this.$set(this.task_list, index, obj);
+                // console.log(this.task_list);
+            },
+            timestampToDate(a) {
+                const date = new Date(a);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                const Y = date.getFullYear() + '-';
+                const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                const D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' ';
+                const time = Y + M + D;
+                return time;
+            },
+            timestampToTime(a) {
+                const date = new Date(a);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                const h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+                const m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+                const s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+                const time = h + m + s;
+                return time;
+            },
+
+        },
+        mounted() {
+            this.getdata('today');
+            this.today = this.timestampToDate(Date());
+            this.time = this.timestampToTime(Date());
+        },
+    })
+</script>
+</body>
+</html>
